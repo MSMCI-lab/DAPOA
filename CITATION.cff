@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use DAPOA, please cite the accompanying paper."
+title: "DAPOA: Dependence-Aware Policy Optimization Algorithms for AI-agent safeguard systems"
+version: 0.1.0
+date-released: 2026-10-13
+license: MIT
+repository-code: "https://github.com/MSMCI-lab/DAPOA"
+authors:
+  - family-names: Li
+    given-names: Yijia
+  - family-names: Xu
+    given-names: Maochao
+    affiliation: "Department of Mathematics, Illinois State University"
+    email: mxu2@ilstu.edu
+  - family-names: Zhao
+    given-names: Peng
+preferred-citation:
+  type: article
+  title: "Dependence-Aware Reliability Assessment and Optimal Design of AI-Agent Safeguard Systems"
+  authors:
+    - family-names: Li
+      given-names: Yijia
+    - family-names: Xu
+      given-names: Maochao
+    - family-names: Zhao
+      given-names: Peng
+  year: 2026

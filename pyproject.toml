@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dapoa"
+version = "0.1.0"
+description = "Dependence-Aware Policy Optimization Algorithms for AI-agent safeguard systems"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Yijia Li"}, {name = "Maochao Xu", email = "mxu2@ilstu.edu"}, {name = "Peng Zhao"}]
+keywords = ["AI safety", "LLM agents", "safeguards", "copula", "reliability", "optimization"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = ["numpy>=1.24", "scipy>=1.15", "pandas>=2.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+dapoa = "dapoa.cli:main"
+
+[project.urls]
+Repository = "https://github.com/MSMCI-lab/DAPOA"
+
+[tool.setuptools.packages.find]
+include = ["dapoa*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
