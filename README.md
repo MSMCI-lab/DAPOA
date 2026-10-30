@@ -7,7 +7,8 @@ costs, error limits, loss parameters, deployment mixture). DAPOA then
 
 1. estimates the class-conditional joint decision probabilities with several dependence models
    (independence, Gaussian, Student-t, Clayton and Gumbel copulas, plus the empirical frequencies),
-2. **selects the dependence model automatically** (BIC by default; AIC or grouped cross-validation optionally),
+2. **selects the dependence model automatically** (BIC by default; AIC, which the paper's empirical study uses,
+   or grouped cross-validation optionally),
 3. solves the **exact reliability-constrained design problem** over sequential layered screening and
    selective verification policies (subset dynamic programme + binary routing programmes), and
 4. reports the optimal configuration (which safeguards, in what order, which reviewer, and the
@@ -15,8 +16,7 @@ costs, error limits, loss parameters, deployment mixture). DAPOA then
 
 It implements the framework of
 
-> Y. Li, M. Xu and P. Zhao (2026). *Dependence-Aware Risk Assessment and Optimal Design of
-AI-Agent Safeguard Systems*
+> Y. Li, M. Xu and P. Zhao (2026). *Dependence-Aware Risk Assessment and Optimal Design of AI-Agent Safeguard Systems.*
 
 ## Install
 
@@ -76,9 +76,9 @@ final, invoked = policy.decide(lambda j: my_safeguards[j](candidate))   # 0 = AL
 |---|---|
 | `fit_family(data, y, family)` / `select_model(data, y, families, criterion)` | pattern-likelihood estimation with fixed empirical margins; BIC/AIC/CV selection |
 | `gaussian_patterns`, `student_t_patterns`, `clayton_patterns`, `gumbel_patterns`, `product_patterns` | pattern probabilities `q_y(d)` for specified parameters (no data needed) |
-| `layered_opt(q1, q0, req)` | Algorithm 1 (LayeredOpt): exact subset selection and invocation ordering |
+| `layered_opt(q1, q0, req)` | Algorithm 1 of the paper: exact subset selection and invocation ordering |
 | `routing_opt(q1, q0, req, F, h)` | binary routing programme for one first-stage/reviewer pair (HiGHS or enumeration) |
-| `design(q1, q0, req, cross_check=True)` | Algorithm 2: global optimum over both policy classes, optional enumeration check |
+| `design(q1, q0, req, cross_check=True)` | Algorithm 2 of the paper: global optimum over both policy classes, optional enumeration check |
 | `policy_metrics`, `evaluate_policy`, `paired_bootstrap` | model-based and held-out evaluation |
 | `simulate_decisions` | synthetic decisions from specified class-conditional copulas |
 
@@ -109,7 +109,7 @@ Student-t profile if speed matters.
 
 ## Reproducing the paper's numerical pool
 
-`examples/numerical_pool.py` runs the heterogeneous four-safeguard pool of Section 4 (Table 1) under the
+`examples/numerical_pool.py` runs the heterogeneous four-safeguard pool of Section 4 (Tables 3-6) under the
 independence and equicorrelated Gaussian scenarios and prints the returned verification maps. The tests
 check the published values (e.g. under independence the optimum `R1` has `J = 1.086534`).
 
@@ -117,8 +117,7 @@ check the published values (e.g. under independence the optimum `R1` has `J = 1.
 
 ```bibtex
 @article{xu2026dapoa,
-  title   = {Dependence-Aware Risk Assessment and Optimal Design of
-AI-Agent Safeguard Systems},
+  title   = {Dependence-Aware Risk Assessment and Optimal Design of AI-Agent Safeguard Systems},
   author  = {Li, Yijia and Xu, Maochao and Zhao, Peng},
   year    = {2026},
   note    = {Software: DAPOA, https://github.com/MSMCI-lab/DAPOA}

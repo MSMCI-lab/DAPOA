@@ -1,12 +1,13 @@
 """Exact dependence-aware policy search (Algorithms 1 and 2 of the paper).
 
-* :func:`layered_opt` -- Algorithm 1 (LayeredOpt): subset dynamic programme over ``2**m`` states giving the
+* :func:`layered_opt` -- Algorithm 1 of the paper: subset dynamic programme over ``2**m`` states giving the
   minimum operating cost ``K*(S)`` and an optimal invocation order for every subset, followed by constrained
   subset selection.  No intermediate state is pruned by the error limits.
-* :func:`routing_opt` -- the binary routing programme (3.25) for one first-stage/reviewer pair, solved globally
+* :func:`routing_opt` -- the binary routing programme, Eq. (3.6) (Eq. (3.7) for the budget objective), for one
+  first-stage/reviewer pair, solved globally
   by scipy's HiGHS mixed-integer solver (``mip_rel_gap = 0``), or by exhaustive enumeration on request.
-* :func:`design` -- Algorithm 2: LayeredOpt plus every admitted pair; returns the global optimum of the
-  total-cost problem (2.26) or of the budget problem (2.27) within the admitted class, or INFEASIBLE.
+* :func:`design` -- Algorithm 2 of the paper: Algorithm 1 plus every admitted pair; returns the global optimum
+  of the total-cost problem Eq. (2.9) or of the budget problem Eq. (2.10) within the admitted class, or INFEASIBLE.
 
 Ties are resolved by the fixed hierarchy (J, M, B, K, canonical index) for minimum total cost and
 (M, K, B, canonical index) for minimum miss, with a relative tolerance ``tie_rel * max(1, |key|)``.
@@ -161,7 +162,7 @@ def layered_opt(q1: np.ndarray, q0: np.ndarray, req: Requirements) -> dict:
             "feasible_without_tolerance": best["feasible_strict"]}
 
 
-# ====================================================================================== routing programme (3.25)
+# ====================================================================================== routing programme, Eq. (3.6)
 def _pair_coefficients(q1, q0, F, h):
     m = int(np.log2(len(q1))); D = pattern_matrix(m); n = 1 << len(F); w = (D[:, list(F)] * (1 << np.arange(len(F)))).sum(1).astype(int)
     s1 = np.bincount(w, weights=q1, minlength=n); s0 = np.bincount(w, weights=q0, minlength=n)

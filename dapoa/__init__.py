@@ -11,7 +11,7 @@ parameters, deployment mixture), DAPOA
    selective verification policies (dynamic programme + binary routing programmes), and
 4. reports the selected configuration together with the independence-based comparator.
 
-Reference: Y. Li, M. Xu and P. Zhao, "Dependence-Aware Reliability Assessment and Optimal Design of AI-Agent
+Reference: Y. Li, M. Xu and P. Zhao, "Dependence-Aware Risk Assessment and Optimal Design of AI-Agent
 Safeguard Systems" (2026).
 """
 from .data import CalibrationData, pattern_matrix, pattern_index
@@ -23,7 +23,7 @@ from .evaluate import evaluate_policy, paired_bootstrap
 from .pipeline import run_design, DesignReport
 from .simulate import simulate_decisions
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __all__ = [
     "CalibrationData", "pattern_matrix", "pattern_index",
     "PatternModel", "fit_family", "fit_all", "select_model", "product_patterns", "empirical_patterns",

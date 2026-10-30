@@ -1,7 +1,7 @@
 """Safeguard-combination policies: sequential layered screening and selective verification.
 
 Both classes are evaluated from the class-conditional pattern tables ``q1`` (unauthorized) and ``q0``
-(authorized) via eqs. (2.18)-(2.19):  ``M = sum_d [1 - g(d)] q1(d)``,  ``B = sum_d g(d) q0(d)``,
+(authorized) via Eqs. (2.2)-(2.3) of the paper:  ``M = sum_d [1 - g(d)] q1(d)``,  ``B = sum_d g(d) q0(d)``,
 ``K = sum_d c(S(d)) [omega q1(d) + (1-omega) q0(d)]``,  ``J = K + omega lM M + (1-omega) lB B``.
 """
 from __future__ import annotations

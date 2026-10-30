@@ -1,7 +1,7 @@
 """Class-conditional joint decision probabilities: copula families, estimation and model selection.
 
 For a class ``y`` with empirical blocking probabilities ``p_j`` and a copula ``C``, the probability of the
-binary pattern ``d`` is the rectangle probability (finite difference) of eq. (2.17) in the paper::
+binary pattern ``d`` is the rectangle probability (finite difference) of Eq. (2.5) of the paper::
 
     q(d) = sum_{eps in {0,1}^m} (-1)^{|eps|} C(F_1(d_1 - eps_1), ..., F_m(d_m - eps_m)),
 
@@ -9,7 +9,8 @@ with ``F_j(-1) = 0``, ``F_j(0) = 1 - p_j`` (ALLOW probability) and ``F_j(1) = 1`
 rectangle probabilities of the latent vector (deterministic quasi-Monte Carlo with a fixed generator);
 Archimedean families use the explicit copula.  Margins are the empirical class proportions and are shared
 by every family (including the independence comparator).  Dependence parameters are estimated by
-maximizing the grouped pattern log-likelihood (eq. C.4); families are compared by BIC (eq. C.5) by default.
+maximizing the grouped pattern log-likelihood (Section 5.1 of the paper and Section S3.2 of the supplement);
+families are compared by BIC by default, while the paper's empirical study uses AIC (``criterion="aic"``).
 
 Coordinates whose empirical blocking probability is 0 or 1 are constant in the class; they are excluded
 from dependence estimation and restored as constants when the full pattern table is formed.
@@ -68,7 +69,7 @@ def student_t_patterns(p, R, nu: float, seed: int = 0, maxpts: int = 200_000, ab
 
 
 def _archimedean_patterns(p: np.ndarray, C) -> np.ndarray:
-    """Finite differences of an explicit copula ``C(u)`` (eq. 2.17)."""
+    """Finite differences of an explicit copula ``C(u)`` (Eq. (2.5) of the paper)."""
     m = len(p); D = pattern_matrix(m); F = {-1: np.zeros(m), 0: 1 - p, 1: np.ones(m)}
     out = np.zeros(1 << m)
     for d in range(1 << m):
@@ -286,7 +287,7 @@ def select_model(data: CalibrationData, y: int, families: Sequence[str] = FAMILI
                  n_folds: int = 5, include_empirical: bool = False, **kw) -> tuple[PatternModel, dict[str, PatternModel], dict]:
     """Fit the candidate families and select one.
 
-    criterion: ``"bic"`` (default, eq. C.5), ``"aic"``, or ``"cv"`` (grouped out-of-fold log score).
+    criterion: ``"bic"`` (default), ``"aic"`` (used in the paper), or ``"cv"`` (grouped out-of-fold log score).
     Returns (selected model, all fitted models, selection table).
     """
     models = fit_all(data, y, families, seed=seed, **kw)
