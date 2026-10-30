@@ -15,7 +15,8 @@ costs, error limits, loss parameters, deployment mixture). DAPOA then
 
 It implements the framework of
 
-> Y. Li, M. Xu and P. Zhao (2026). *Dependence-Aware Reliability Assessment and Optimal Design of AI-Agent Safeguard Systems.*
+> Y. Li, M. Xu and P. Zhao (2026). *Dependence-Aware Risk Assessment and Optimal Design of
+AI-Agent Safeguard Systems*
 
 ## Install
 
@@ -116,7 +117,8 @@ check the published values (e.g. under independence the optimum `R1` has `J = 1.
 
 ```bibtex
 @article{xu2026dapoa,
-  title   = {Dependence-Aware Reliability Assessment and Optimal Design of AI-Agent Safeguard Systems},
+  title   = {Dependence-Aware Risk Assessment and Optimal Design of
+AI-Agent Safeguard Systems},
   author  = {Li, Yijia and Xu, Maochao and Zhao, Peng},
   year    = {2026},
   note    = {Software: DAPOA, https://github.com/MSMCI-lab/DAPOA}
