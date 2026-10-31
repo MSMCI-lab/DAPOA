@@ -10,7 +10,7 @@ rectangle probabilities of the latent vector (deterministic quasi-Monte Carlo wi
 Archimedean families use the explicit copula.  Margins are the empirical class proportions and are shared
 by every family (including the independence comparator).  Dependence parameters are estimated by
 maximizing the grouped pattern log-likelihood (Section 5.1 of the paper and Section S3.2 of the supplement);
-families are compared by BIC by default, while the paper's empirical study uses AIC (``criterion="aic"``).
+families are compared by AIC by default, as in the paper's empirical study (``criterion="bic"`` optionally).
 
 Coordinates whose empirical blocking probability is 0 or 1 are constant in the class; they are excluded
 from dependence estimation and restored as constants when the full pattern table is formed.
@@ -196,7 +196,7 @@ def fit_family(data: CalibrationData, y: int, family: str, seed: int = 0, nu_gri
 
     Elliptical rectangle probabilities use a fixed quasi-Monte Carlo generator: a coarse tolerance (``fit_*``) during the
     likelihood optimization and a tight one (``final_*``) for the reported pattern table.  Student-t degrees of freedom are
-    profiled over ``nu_grid`` (one extra parameter in BIC).
+    profiled over ``nu_grid`` (one extra parameter in the information criteria).
     """
     if family not in FAMILIES:
         raise ValueError(f"unknown family {family!r}; choose from {FAMILIES}")
@@ -267,27 +267,11 @@ def fit_all(data: CalibrationData, y: int, families: Sequence[str] = FAMILIES, s
     return out
 
 
-def _cv_score(data: CalibrationData, y: int, family: str, n_folds: int, seed: int, **kw) -> float:
-    """Out-of-fold pattern log score (higher is better); folds keep groups together."""
-    folds = data.split_by_group(n_folds, seed)[0]; cls = data.y == y; score = 0.0
-    for f in range(n_folds):
-        train = cls & (folds != f); test = cls & (folds == f)
-        if test.sum() == 0 or train.sum() < 2:
-            continue
-        # training container: the fold's class-y actions plus one action of the other class (required by the validator; unused)
-        sub = CalibrationData(np.vstack([data.decisions[train], data.decisions[data.y != y][:1]]), np.r_[np.full(train.sum(), y), [1 - y]], data.components)
-        model = fit_family(sub, y, family, seed=seed, **kw)
-        q = np.clip(model.q, 1e-12, None); q = q / q.sum()
-        test_idx = (data.decisions[test] * (1 << np.arange(data.m))).sum(axis=1)
-        score += float(np.sum(np.log(q[test_idx])))
-    return score
-
-
-def select_model(data: CalibrationData, y: int, families: Sequence[str] = FAMILIES, criterion: str = "bic", seed: int = 0,
-                 n_folds: int = 5, include_empirical: bool = False, **kw) -> tuple[PatternModel, dict[str, PatternModel], dict]:
+def select_model(data: CalibrationData, y: int, families: Sequence[str] = FAMILIES, criterion: str = "aic", seed: int = 0,
+                 include_empirical: bool = False, **kw) -> tuple[PatternModel, dict[str, PatternModel], dict]:
     """Fit the candidate families and select one.
 
-    criterion: ``"bic"`` (default), ``"aic"`` (used in the paper), or ``"cv"`` (grouped out-of-fold log score).
+    criterion: ``"aic"`` (default, as in the paper) or ``"bic"``.
     Returns (selected model, all fitted models, selection table).
     """
     models = fit_all(data, y, families, seed=seed, **kw)
@@ -295,14 +279,12 @@ def select_model(data: CalibrationData, y: int, families: Sequence[str] = FAMILI
     table = {}
     for f in cands:
         mdl = models[f]
-        if criterion == "bic":
-            table[f] = {"score": mdl.bic, "loglik": mdl.loglik, "n_params": mdl.n_params}
-        elif criterion == "aic":
+        if criterion == "aic":
             table[f] = {"score": mdl.aic, "loglik": mdl.loglik, "n_params": mdl.n_params}
-        elif criterion == "cv":
-            table[f] = {"score": -_cv_score(data, y, f, n_folds, seed, **kw) if f != "empirical" else np.inf, "loglik": mdl.loglik, "n_params": mdl.n_params}
+        elif criterion == "bic":
+            table[f] = {"score": mdl.bic, "loglik": mdl.loglik, "n_params": mdl.n_params}
         else:
-            raise ValueError("criterion must be 'bic', 'aic' or 'cv'")
+            raise ValueError("criterion must be 'aic' or 'bic'")
     # lower score is better for every criterion as stored; ties resolved in the order of ``families`` (independence first)
     best = min(cands, key=lambda f: (table[f]["score"], cands.index(f)))
     sel = {"criterion": criterion, "selected": best, "table": table,

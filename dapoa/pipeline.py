@@ -100,7 +100,7 @@ class DesignReport:
         return "\n".join(L) + "\n"
 
 
-def run_design(data: CalibrationData, req: Requirements, families: Sequence[str] = FAMILIES, criterion: str = "bic", seed: int = 0, method: str = "milp",
+def run_design(data: CalibrationData, req: Requirements, families: Sequence[str] = FAMILIES, criterion: str = "aic", seed: int = 0, method: str = "milp",
                cross_check: bool = False, evaluation: Optional[CalibrationData] = None, n_boot: int = 500, include_empirical_design: bool = True, **fit_kw) -> DesignReport:
     """Run the complete DAPOA procedure.
 

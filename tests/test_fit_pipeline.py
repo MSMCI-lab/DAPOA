@@ -36,7 +36,7 @@ def test_constant_coordinate_handling():
 def test_pipeline_and_evaluation():
     data = _data(seed=1, n=600); ev = _data(seed=2, n=400)
     req = Requirements([0.2, 0.35, 0.65], omega=0.2, alpha=0.08, beta=0.15, loss_miss=100, loss_false_block=10)
-    rep = run_design(data, req, ("independence", "gaussian", "clayton"), "bic", evaluation=ev, n_boot=50, cross_check=True)
+    rep = run_design(data, req, ("independence", "gaussian", "clayton"), "aic", evaluation=ev, n_boot=50, cross_check=True)
     d = rep.to_dict(); json.dumps(d, default=str)
     assert rep.dependence_aware.status == "optimal" and rep.dependence_aware.cross_check["agrees"]
     assert "dependence_aware" in rep.evaluation and "paired_bootstrap_dependence_aware_minus_independence" in rep.evaluation

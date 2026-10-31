@@ -35,7 +35,7 @@ def main(argv=None) -> int:
     d.add_argument("--objective", choices=["min_total_cost", "min_miss"], default="min_total_cost")
     d.add_argument("--alpha", type=float, default=0.05); d.add_argument("--beta", type=float, default=0.10); d.add_argument("--budget", type=float, default=None)
     d.add_argument("--omega", type=float, default=0.5); d.add_argument("--loss-miss", type=float, default=100.0); d.add_argument("--loss-false-block", type=float, default=10.0)
-    d.add_argument("--families", nargs="+", default=list(FAMILIES), choices=list(FAMILIES)); d.add_argument("--criterion", choices=["bic", "aic", "cv"], default="bic")
+    d.add_argument("--families", nargs="+", default=list(FAMILIES), choices=list(FAMILIES)); d.add_argument("--criterion", choices=["aic", "bic"], default="aic")
     d.add_argument("--no-verification", action="store_true", help="layered screening only"); d.add_argument("--flag-to-review-only", action="store_true", help="restrict verification to fixed flag-to-review cascades")
     d.add_argument("--max-layered-size", type=int, default=None); d.add_argument("--allowed-reviewers", nargs="*", default=None); d.add_argument("--required", nargs="*", default=None)
     d.add_argument("--method", choices=["milp", "enumerate"], default="milp"); d.add_argument("--cross-check", action="store_true", help="verify by exhaustive enumeration (m <= 4)")

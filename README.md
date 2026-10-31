@@ -7,8 +7,7 @@ costs, error limits, loss parameters, deployment mixture). DAPOA then
 
 1. estimates the class-conditional joint decision probabilities with several dependence models
    (independence, Gaussian, Student-t, Clayton and Gumbel copulas, plus the empirical frequencies),
-2. **selects the dependence model automatically** (BIC by default; AIC, which the paper's empirical study uses,
-   or grouped cross-validation optionally),
+2. **selects the dependence model automatically** by AIC, as in the paper's empirical study (BIC optionally),
 3. solves the **exact reliability-constrained design problem** over sequential layered screening and
    selective verification policies (subset dynamic programme + binary routing programmes), and
 4. reports the optimal configuration (which safeguards, in what order, which reviewer, and the
@@ -40,10 +39,10 @@ dapoa design calibration.csv --group group \
     --costs D1=0.20 D2=0.35 D3=0.65 D4=2.00 \
     --objective min_total_cost --alpha 0.05 --beta 0.10 --omega 0.10 \
     --loss-miss 100 --loss-false-block 10 \
-    --criterion bic --cross-check --out report.json --markdown report.md
+    --cross-check --out report.json --markdown report.md
 ```
 
-The Markdown report lists the fitted families with their log-likelihoods and BIC scores per class, the
+The Markdown report lists the fitted families with their log-likelihoods and AIC scores per class, the
 selected model, and the optimal policy with its predicted miss probability `M`, false-block probability
 `B`, operating cost `K` and total cost `J`, next to the independence-based selection evaluated under the
 selected dependence model. Pass `--evaluation holdout.csv` to replay the selected policies on held-out
@@ -58,7 +57,7 @@ from dapoa import CalibrationData, Requirements, run_design
 data = CalibrationData.from_csv("calibration.csv", label="y", group="group")
 req = Requirements(costs=[0.20, 0.35, 0.65, 2.00], omega=0.10, objective="min_total_cost",
                    alpha=0.05, beta=0.10, loss_miss=100, loss_false_block=10)
-report = run_design(data, req, criterion="bic", cross_check=True)
+report = run_design(data, req, cross_check=True)              # criterion="aic" by default
 print(report.to_markdown())
 policy = report.dependence_aware.policy           # LayeredPolicy or VerificationPolicy
 print(policy.to_dict(data.components))             # deployable definition (order, or F / reviewer / routing table)
@@ -74,7 +73,7 @@ final, invoked = policy.decide(lambda j: my_safeguards[j](candidate))   # 0 = AL
 
 | function | purpose |
 |---|---|
-| `fit_family(data, y, family)` / `select_model(data, y, families, criterion)` | pattern-likelihood estimation with fixed empirical margins; BIC/AIC/CV selection |
+| `fit_family(data, y, family)` / `select_model(data, y, families, criterion)` | pattern-likelihood estimation with fixed empirical margins; AIC (default) or BIC selection |
 | `gaussian_patterns`, `student_t_patterns`, `clayton_patterns`, `gumbel_patterns`, `product_patterns` | pattern probabilities `q_y(d)` for specified parameters (no data needed) |
 | `layered_opt(q1, q0, req)` | Algorithm 1 of the paper: exact subset selection and invocation ordering |
 | `routing_opt(q1, q0, req, F, h)` | binary routing programme for one first-stage/reviewer pair (HiGHS or enumeration) |

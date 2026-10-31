@@ -6,7 +6,7 @@ parameters, deployment mixture), DAPOA
 
 1. estimates class-conditional joint decision probabilities with several copula families
    (independence, Gaussian, Student-t, Clayton, Gumbel) and the empirical frequencies,
-2. selects the dependence model (BIC by default, AIC or grouped cross-validation optionally),
+2. selects the dependence model (AIC by default, as in the paper's empirical study; BIC optionally),
 3. solves the exact reliability-constrained design problem over sequential layered screening and
    selective verification policies (dynamic programme + binary routing programmes), and
 4. reports the selected configuration together with the independence-based comparator.
@@ -23,7 +23,7 @@ from .evaluate import evaluate_policy, paired_bootstrap
 from .pipeline import run_design, DesignReport
 from .simulate import simulate_decisions
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 __all__ = [
     "CalibrationData", "pattern_matrix", "pattern_index",
     "PatternModel", "fit_family", "fit_all", "select_model", "product_patterns", "empirical_patterns",

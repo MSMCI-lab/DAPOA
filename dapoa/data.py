@@ -126,15 +126,3 @@ class CalibrationData:
                 "error_counts": self.error_counts(),
                 "constant_components_y1": [c for j, c in enumerate(self.components) if self.subset(1)[:, j].std() == 0],
                 "constant_components_y0": [c for j, c in enumerate(self.components) if self.subset(0)[:, j].std() == 0]}
-
-    def split_by_group(self, n_folds: int, seed: int = 0) -> list[np.ndarray]:
-        """Fold assignment (array of fold ids per action) that keeps groups together; random if no groups."""
-        rng = np.random.default_rng(seed)
-        if self.groups is None:
-            folds = np.empty(len(self.y), dtype=np.int64)
-            for cls in (0, 1):
-                idx = np.flatnonzero(self.y == cls); rng.shuffle(idx); folds[idx] = np.arange(len(idx)) % n_folds
-            return [folds]
-        g = np.unique(self.groups); rng.shuffle(g)
-        fold_of_group = {gid: i % n_folds for i, gid in enumerate(g)}
-        return [np.array([fold_of_group[x] for x in self.groups])]
